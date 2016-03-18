@@ -37,29 +37,47 @@
     <p>
         <input type="file" name="xlfile" id="xlf" /> ... or click here to select a file
     </p>
-    <div class="dropdown">
-        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" name="sheet_dropdown">Sheet selection
-            <span class="caret"></span></button>
-        <ul class="dropdown-menu" id="sheet_options">
-        </ul>
+    <div class="checkbox">
+        <label>
+            <input type="checkbox" value="false" onclick="displayOutput(this)" name="chk_file_output">Display file output</label>
     </div>
-    <div>
+    <div class="checkbox">
+        <label>
+            <input type="checkbox" value="false" onclick="displayOutput(this)" name="chk_sheet_output">Display sheet output</label>
+    </div>
+    <div class="checkbox">
+        <label>
+            <input type="checkbox" value="false" onclick="displayOutput(this)" name="chk_line_output">Display line output</label>
+    </div>
+    <p style="display:inline">
+        Sheet:&nbsp;
+        <div class="dropdown" style="display:inline">
+            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" name="sheet_dropdown" style="width: 200px;">Sheet selection
+                <span class="caret"></span></button>
+            <ul class="dropdown-menu" id="sheet_options" style="width: 200px;">
+            </ul>
+        </div>
+    </p>
+    <p style="display:inline">
+        Line:&nbsp;
+        <div class="dropdown" style="display:inline">
+            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" name="line_dropdown" style="width: 200px;">Line selection
+                <span class="caret"></span></button>
+            <ul class="dropdown-menu" id="line_options" style="width: 200px;">
+            </ul>
+        </div>
+    </p>
+    <div id="sheet_output">
         <b>Sheet output</b>
         <!--Sheet output is printed here-->
         <pre id="out_sheet"></pre>
     </div>
-    <div class="dropdown">
-        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" name="line_dropdown">Line selection
-            <span class="caret"></span></button>
-        <ul class="dropdown-menu" id="line_options">
-        </ul>
-    </div>
-    <div>
+    <div id="line_output">
         <b>Line output</b>
         <!--Sheet output is printed here-->
         <pre id="out_line"></pre>
     </div>
-    <div>
+    <div id="file_output">
         <b>JSON output</b>
         <!--Output is printed here-->
         <pre id="out"></pre>
@@ -98,17 +116,46 @@
 	        return [v, b];
         }
 
-    function getSheetDropdown(){
-        return $('[name="sheet_dropdown"]');
-    }
+        function hideOutputs(){
+            $('#sheet_output').hide();
+            $('#line_output').hide();
+            $('#file_output').hide();
+        }
 
-    function sheetDropdownEnabled(enable){
-        getSheetDropdown().prop('disabled', !enable);
-    }
+        function displayOutput(checkbox){
+            switch(checkbox.name){
+                case "chk_sheet_output":
+                if(checkbox.checked)
+                    $('#sheet_output').show();
+                else
+                    $('#sheet_output').hide();
+                break;
+                case "chk_line_output":
+                if(checkbox.checked)
+                    $('#line_output').show();
+                else
+                    $('#line_output').hide();
+                break;
+                case "chk_file_output":
+                if(checkbox.checked)
+                    $('#file_output').show();
+                else
+                    $('#file_output').hide();
+                break;
+            }
+        }
+
+        function getSheetDropdown(){
+            return $('[name="sheet_dropdown"]');
+        }
+
+        function sheetDropdownEnabled(enable){
+            getSheetDropdown().prop('disabled', !enable);
+        }
     
-    function getLineDropdown(){
-        return $('[name="line_dropdown"]');
-    }
+        function getLineDropdown(){
+            return $('[name="line_dropdown"]');
+        }
 
     function lineDropdownEnabled(enable){
         getLineDropdown().prop('disabled', !enable);
@@ -174,7 +221,7 @@ function onSelectedSheetChanged(){
     updateSheetOutput();
     updateLineOptions();
     selectLine(-1);
-    lineDropdownEnabled(true);
+    lineDropdownEnabled(selectedSheetIndex >= 0);
 }
 
 function updateSheetOutput()
@@ -189,11 +236,13 @@ function updateSheetOutput()
 }
 
 function updateLineOptions(){
-    var lineOptions = $('#line_options');
-    var selectedSheet = sheets[selectedSheetIndex];
-    lineOptions.html("");
-    for(var lineIndex in selectedSheet.lines){
-        lineOptions.append("<li><a href=\"#\" data-value=\"" + lineIndex + "\" onclick=\"selectLine('" + lineIndex + "')\">" + lineIndex + "</a></li>");
+     var lineOptions = $('#line_options');
+     lineOptions.html("");
+    if(selectedSheetIndex >= 0){
+        var selectedSheet = sheets[selectedSheetIndex];
+        for(var lineIndex in selectedSheet.lines){
+            lineOptions.append("<li><a href=\"#\" data-value=\"" + lineIndex + "\" onclick=\"selectLine('" + lineIndex + "')\">" + lineIndex + "</a></li>");
+        }
     }
 }
 
@@ -269,6 +318,7 @@ if(xlf.addEventListener) xlf.addEventListener('change', handleFile, false);
     $(document).ready(function(){
         sheetDropdownEnabled(false);
         lineDropdownEnabled(false);
+        hideOutputs();
     });
     </script>
 </body>
