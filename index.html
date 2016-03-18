@@ -5,6 +5,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>JS-XLSX Live Demo</title>
     <style>
         #drop {
@@ -22,6 +23,12 @@
             width: 100%;
         }
     </style>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
+    crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-2.2.2.min.js" integrity="sha256-36cp2Co+/62rEAAYHLmRCPIych47CvdM+uTBJwSzWjI="
+    crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+    crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -30,18 +37,47 @@
     <p>
         <input type="file" name="xlfile" id="xlf" /> ... or click here to select a file
     </p>
-    <!--Output is printed here-->
-    <pre id="out"></pre>
+    <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" name="sheet_dropdown">Sheet selection
+            <span class="caret"></span></button>
+        <ul class="dropdown-menu" id="sheet_options">
+        </ul>
+    </div>
+    <div>
+        <b>Sheet output</b>
+        <!--Sheet output is printed here-->
+        <pre id="out_sheet"></pre>
+    </div>
+    <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" name="line_dropdown">Line selection
+            <span class="caret"></span></button>
+        <ul class="dropdown-menu" id="line_options">
+        </ul>
+    </div>
+    <div>
+        <b>Line output</b>
+        <!--Sheet output is printed here-->
+        <pre id="out_line"></pre>
+    </div>
+    <div>
+        <b>JSON output</b>
+        <!--Output is printed here-->
+        <pre id="out"></pre>
+    </div>
     <!-- uncomment the next line here and in xlsxworker.js for encoding support -->
     <!--<script src="dist/cpexcel.js"></script>-->
-    <script src="js/shim.js"></script>
+    <script src="js/shim.js" type="text/javascript"></script>
+    <script src="js/xlsxprocess.js" type="text/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js" type="text/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.full.min.js" type="text/javascript"></script>
     <!-- uncomment the next line here and in xlsxworker.js for ODS support -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/ods.js" type="text/javascript"></script>
     <script>
         var X = XLSX;
-
+        var sheets = null;
+        var selectedSheetIndex = -1;
+        var selectedLineIndex = -1;
+        
         function fixdata(data) {
 	        var o = "", l = 0, w = 10240;
 	        for(; l<data.byteLength/w; ++l) o+=String.fromCharCode.apply(null,new Uint8Array(data.slice(l*w,l*w+w)));
@@ -49,130 +85,49 @@
 	        return o;
         }
 
-function ab2str(data) {
-	var o = "", l = 0, w = 10240;
-	for(; l<data.byteLength/w; ++l) o+=String.fromCharCode.apply(null,new Uint16Array(data.slice(l*w,l*w+w)));
-	o+=String.fromCharCode.apply(null, new Uint16Array(data.slice(l*w)));
-	return o;
-}
-
-function s2ab(s) {
-	var b = new ArrayBuffer(s.length*2), v = new Uint16Array(b);
-	for (var i=0; i != s.length; ++i) v[i] = s.charCodeAt(i);
-	return [v, b];
-}
-
-/*function xw_noxfer(data, cb) {
-	var worker = new Worker(XW.noxfer);
-	worker.onmessage = function(e) {
-		switch(e.data.t) {
-			case 'ready': break;
-			case 'e': console.error(e.data.d); break;
-			case XW.msg: cb(JSON.parse(e.data.d)); break;
-		}
-	};
-	var arr = rABS ? data : btoa(fixdata(data));
-	worker.postMessage({d:arr,b:rABS});
-}
-
-function xw_xfer(data, cb) {
-	var worker = new Worker(rABS ? XW.rABS : XW.norABS);
-	worker.onmessage = function(e) {
-		switch(e.data.t) {
-			case 'ready': break;
-			case 'e': console.error(e.data.d); break;
-			default: xx=ab2str(e.data).replace(/\n/g,"\\n").replace(/\r/g,"\\r"); console.log("done"); cb(JSON.parse(xx)); break;
-		}
-	};
-	if(rABS) {
-		var val = s2ab(data);
-		worker.postMessage(val[1], [val[1]]);
-	} else {
-		worker.postMessage(data, [data]);
-	}
-}*/
-
-function xw(data, cb) {
-	transferable = document.getElementsByName("xferable")[0].checked;
-	if(transferable) xw_xfer(data, cb);
-	else xw_noxfer(data, cb);
-}
-
-function to_json(workbook) {
-    var result = new Array();
-    var sheet_name_list = workbook.SheetNames;
-    sheet_name_list.forEach(function(y) { /* iterate through sheets */
-        var worksheet = workbook.Sheets[y];
-        
-        var sheet = new Object();
-        sheet.name = y;
-        sheet.lines = {};
-
-        var line = -1;
-        /* iterate through cells */
-        for (z in worksheet) {
-            /* all keys that do not begin with "!" correspond to cell addresses */
-            if(z[0] === '!') continue;
-            var col = z.match(/^[A-Z]+/)[0];
-            var ln = parseInt(z.match(/[1-9][0-9]*$/));
-            var value = worksheet[z].v;
-            
-            if(line != ln){
-                sheet.lines[ln] = {};
-                line = ln;
-            }
-            sheet.lines[ln][col] = value;
-            //console.log("line: %i col: %s val: %s", ln, col, value);
+        function ab2str(data) {
+	        var o = "", l = 0, w = 10240;
+	        for(; l<data.byteLength/w; ++l) o+=String.fromCharCode.apply(null,new Uint16Array(data.slice(l*w,l*w+w)));
+	        o+=String.fromCharCode.apply(null, new Uint16Array(data.slice(l*w)));
+	        return o;
         }
-        result.push(sheet);
-    });
+
+        function s2ab(s) {
+	        var b = new ArrayBuffer(s.length*2), v = new Uint16Array(b);
+	        for (var i=0; i != s.length; ++i) v[i] = s.charCodeAt(i);
+	        return [v, b];
+        }
+
+    function getSheetDropdown(){
+        return $('[name="sheet_dropdown"]');
+    }
+
+    function sheetDropdownEnabled(enable){
+        getSheetDropdown().prop('disabled', !enable);
+    }
     
-    return result;
-}
+    function getLineDropdown(){
+        return $('[name="line_dropdown"]');
+    }
 
-function to_csv(workbook) {
-	var result = [];
-	workbook.SheetNames.forEach(function(sheetName) {
-		var csv = X.utils.sheet_to_csv(workbook.Sheets[sheetName]);
-		if(csv.length > 0){
-			result.push("SHEET: " + sheetName);
-			result.push("");
-			result.push(csv);
-		}
-	});
-	return result.join("\n");
-}
+    function lineDropdownEnabled(enable){
+        getLineDropdown().prop('disabled', !enable);
+    }
 
-function to_formulae(workbook) {
-	var result = [];
-	workbook.SheetNames.forEach(function(sheetName) {
-		var formulae = X.utils.get_formulae(workbook.Sheets[sheetName]);
-		if(formulae.length > 0){
-			result.push("SHEET: " + sheetName);
-			result.push("");
-			result.push(formulae.join("\n"));
-		}
-	});
-	return result.join("\n");
-}
+    function xw(data, cb) {
+	    transferable = document.getElementsByName("xferable")[0].checked;
+	    if(transferable) xw_xfer(data, cb);
+	    else xw_noxfer(data, cb);
+    }
 
-function process_wb(wb) {
-    var result = to_json(wb);
-    var output = JSON.stringify(result, 2, 2);
-	if(out.innerText === undefined) out.textContent = output;
-	else out.innerText = output;
-    return result;
-}
+    var drop = document.getElementById('drop');
+    function handleDrop(e) {
+	    e.stopPropagation();
+	    e.preventDefault();
+	    var files = e.dataTransfer.files;
+	    processFile(files);
+    }
 
-var drop = document.getElementById('drop');
-function handleDrop(e) {
-	e.stopPropagation();
-	e.preventDefault();
-	var files = e.dataTransfer.files;
-	processFile(files);
-}
-
-var sheets;
 function processFile(files){
     var f = files[0];
 	{
@@ -181,17 +136,102 @@ function processFile(files){
 		reader.onload = function(e) {
 			var data = e.target.result;
 			var	wb = X.read(data, {type: 'binary'});
-			var sheets = process_wb(wb);
-            // exemple de parcourt des donnees
-            for(var sheet in sheets){
-                console.log(sheets[sheet].name);
-                /*for(var line in sheets[sheet].lines)
-                    for(var col in sheets[sheet].lines[line])
-                        console.log(sheets[sheet].lines[line][col]);*/
-            }
+			sheets = getSheetData(wb);
+            updateSheetOptions(sheets);
+            selectSheet(-1);
+            sheetDropdownEnabled(true);
+            setOutput(sheets);
 		};
 		reader.readAsBinaryString(f);
 	}
+}
+
+function updateSheetOptions(sheets){
+    var sheetOptions = $('#sheet_options');
+    sheetOptions.html("");
+    for(var sheetIndex in sheets){
+        sheetOptions.append("<li><a href=\"#\" data-value=\"" + sheetIndex + "\" onclick=\"selectSheet('" + sheetIndex + "')\">" + sheets[sheetIndex].name + "</a></li>");
+    }
+}
+
+function selectSheet(sheetIndex) {
+    event.preventDefault()
+    if(selectedSheetIndex != sheetIndex)
+    {
+        selectedSheetIndex = sheetIndex;
+        var sheetDropdown = getSheetDropdown();
+        sheetDropdown.html("");
+        if(selectedSheetIndex >= 0)
+            sheetDropdown.append(sheets[sheetIndex].name);
+        else
+            sheetDropdown.append("Sheet selection");
+        sheetDropdown.append("<span class=\"caret\"></span>");
+        onSelectedSheetChanged();
+    }
+}
+
+function onSelectedSheetChanged(){
+    updateSheetOutput();
+    updateLineOptions();
+    selectLine(-1);
+    lineDropdownEnabled(true);
+}
+
+function updateSheetOutput()
+{
+    var output = "";
+    if(selectedSheetIndex >= 0) output = JSON.stringify(sheets[selectedSheetIndex], 2, 2);
+        
+    if(out_sheet.innerText === undefined)
+        out_sheet.textContent = output;
+	else
+        out_sheet.innerText = output;
+}
+
+function updateLineOptions(){
+    var lineOptions = $('#line_options');
+    var selectedSheet = sheets[selectedSheetIndex];
+    lineOptions.html("");
+    for(var lineIndex in selectedSheet.lines){
+        lineOptions.append("<li><a href=\"#\" data-value=\"" + lineIndex + "\" onclick=\"selectLine('" + lineIndex + "')\">" + lineIndex + "</a></li>");
+    }
+}
+
+function selectLine(lineIndex){
+    event.preventDefault();
+    if(selectedLineIndex != lineIndex){
+        selectedLineIndex = lineIndex;
+        var lineDropdown = getLineDropdown();
+        lineDropdown.html("");
+        if(selectedLineIndex >= 0)
+            lineDropdown.append(selectedLineIndex);
+        else
+            lineDropdown.append("Line selection");
+        lineDropdown.append("<span class=\"caret\"></span>");
+        onSelectedLineChanged();
+    }
+}
+
+function onSelectedLineChanged(){
+    updateLineOutput();
+}
+
+function updateLineOutput()
+{
+    var output = "";
+    if(selectedLineIndex >= 0) output = JSON.stringify(sheets[selectedSheetIndex].lines[selectedLineIndex], 2, 2);
+        
+    if(out_line.innerText === undefined)
+        out_line.textContent = output;
+	else
+        out_line.innerText = output;
+}
+
+function setOutput(data){
+    // fill output with a json of the data
+    var output = JSON.stringify(data, 2, 2);
+	if(out.innerText === undefined) out.textContent = output;
+	else out.innerText = output;
 }
 
 function handleDragover(e) {
@@ -224,6 +264,12 @@ if(xlf.addEventListener) xlf.addEventListener('change', handleFile, false);
 		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
 		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 	})();
+    
+    // called when the document is ready
+    $(document).ready(function(){
+        sheetDropdownEnabled(false);
+        lineDropdownEnabled(false);
+    });
     </script>
 </body>
 
