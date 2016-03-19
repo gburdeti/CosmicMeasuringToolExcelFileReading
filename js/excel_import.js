@@ -8,6 +8,13 @@ var changeColumn = null;
 var dataColumn = null;
 var systemColumn = null;
 var referenceColumn = null;
+var processColumn = null;
+var dataGroupColumn = null;
+var exitColumn = null;
+var enterColumn = null;
+var readColumn = null;
+var writeColumn = null;
+var commentColumn = null;
 
 function fixdata(data) {
 	var o = "", l = 0, w = 10240;
@@ -29,35 +36,6 @@ function s2ab(s) {
 	return [v, b];
 }
 
-function hideOutputs(){
-	$('#sheet_output').hide();
-	$('#line_output').hide();
-	$('#file_output').hide();
-}
-
-function displayOutput(checkbox){
-	switch(checkbox.name){
-		case "chk_sheet_output":
-		if(checkbox.checked)
-			$('#sheet_output').show();
-		else
-			$('#sheet_output').hide();
-		break;
-		case "chk_line_output":
-		if(checkbox.checked)
-			$('#line_output').show();
-		else
-			$('#line_output').hide();
-		break;
-		case "chk_file_output":
-		if(checkbox.checked)
-			$('#file_output').show();
-		else
-			$('#file_output').hide();
-		break;
-	}
-}
-
 function handleDrop(e) {
 	e.stopPropagation();
 	e.preventDefault();
@@ -76,7 +54,7 @@ function processFile(files){
             updateSheetOptions(sheets);
             selectSheet(-1);
             sheetDropdownEnabled(true);
-            setOutput(sheets);
+            setOutput(out, sheets);
 		};
 		reader.readAsBinaryString(f);
 	}
@@ -107,7 +85,7 @@ function selectSheet(sheetIndex) {
 
 function onSelectedSheetChanged(){
     updateSheetOutput();
-    updateLineOptions();
+	updateLineOptions();
 	// update the line
     selectLine(-1);
     lineDropdownEnabled(selectedSheetIndex >= 0);
@@ -115,13 +93,9 @@ function onSelectedSheetChanged(){
 
 function updateSheetOutput()
 {
-    var output = "";
-    if(selectedSheetIndex >= 0) output = JSON.stringify(sheets[selectedSheetIndex], 2, 2);
-        
-    if(out_sheet.innerText === undefined)
-        out_sheet.textContent = output;
-	else
-        out_sheet.innerText = output;
+    var sheet = null;
+    if(selectedSheetIndex >= 0) sheet = sheets[selectedSheetIndex];
+    setOutput(out_sheet, sheet);
 }
 
 function updateLineOptions(){
@@ -153,6 +127,7 @@ function onSelectedLineChanged(){
     updateLineOutput();
 	if(selectedLineIndex >= 0)
 	{
+		updateHeaderMappingDisplay();
 		getMesureDetailsControl().show();
 	}
 	else
@@ -163,27 +138,28 @@ function onSelectedLineChanged(){
 
 function updateLineOutput()
 {
-    var output = "";
-    if(selectedLineIndex >= 0) output = JSON.stringify(sheets[selectedSheetIndex].lines[selectedLineIndex], 2, 2);
-        
-    if(out_line.innerText === undefined)
-        out_line.textContent = output;
-	else
-        out_line.innerText = output;
+	var line = null;
+    if(selectedLineIndex >= 0) line = sheets[selectedSheetIndex].lines[selectedLineIndex];
+    setOutput(out_line, line);
 }
 
 function updateHeaderMappingDisplay(){
 	if(selectedLineIndex >= 0)
 	{
-		
+		var selectedLine = sheets[selectedSheetIndex].lines[selectedLineIndex];
+		updateDropDownOptions(getChangeOptions(), selectedLine, null);
 	}
 }
 
-function setOutput(data){
-    // fill output with a json of the data
-    var output = JSON.stringify(data, 2, 2);
-	if(out.innerText === undefined) out.textContent = output;
-	else out.innerText = output;
+function updateDropDownOptions(control, options, update){
+	control.html("");
+	for(var option in options){
+		var opt = $("<li></li>");
+		var ref = $("<a href='#'>" + options[option] + "</a>");
+		ref.onClick = update;
+		opt.append(ref);
+		control.append(opt);
+	}
 }
 
 function handleDragover(e) {
