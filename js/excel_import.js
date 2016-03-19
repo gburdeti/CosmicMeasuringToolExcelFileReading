@@ -1,8 +1,13 @@
 var sheets = null;
-var selectedSheetIndex = -1;
-var selectedLineIndex = -1;
+var selectedSheetIndex = 0;
+var selectedLineIndex =  0;
 var xlf = null;
 var drop = null;
+
+var changeColumn = null;
+var dataColumn = null;
+var systemColumn = null;
+var referenceColumn = null;
 
 function fixdata(data) {
 	var o = "", l = 0, w = 10240;
@@ -51,61 +56,6 @@ function displayOutput(checkbox){
 			$('#file_output').hide();
 		break;
 	}
-}
-
-/* SHEET DROPDOWN */
-function getSheetDropdown(){
-	return $('#dd_sheet');
-}
-
-function getSheetOptions(){
-	return $('#opt_sheet');
-}
-
-function sheetDropdownEnabled(enable){
-	getSheetDropdown().prop('disabled', !enable);
-}
-
-/* LINE DROP DOWN */
-function getLineDropdown(){
-	return $('#dd_line');
-}
-
-function getLineOptions(){
-	return $('#opt_line');
-}
-
-function lineDropdownEnabled(enable){
-	getLineDropdown().prop('disabled', !enable);
-}
-
-/* COLUMN DROP DOWNS */
-function getChangeDropDown(){
-	return $("#dd_changements");
-}
-
-function getChangeOptions(){
-	return $("#opt_changements");
-}
-
-function getSystemDropDown(){
-	return $("dd_systeme");
-}
-
-function getSystemOptions(){
-	return $("opt_systeme");
-}
-
-function getReferenceDropDown(){
-	return $("dd_reference");
-}
-
-function getReferenceOptions(){
-	return $("opt_reference");
-}
-
-function getProcessDropDown(){
-	return $("dd_processus");
 }
 
 function handleDrop(e) {
@@ -158,6 +108,7 @@ function selectSheet(sheetIndex) {
 function onSelectedSheetChanged(){
     updateSheetOutput();
     updateLineOptions();
+	// update the line
     selectLine(-1);
     lineDropdownEnabled(selectedSheetIndex >= 0);
 }
@@ -200,6 +151,14 @@ function selectLine(lineIndex){
 
 function onSelectedLineChanged(){
     updateLineOutput();
+	if(selectedLineIndex >= 0)
+	{
+		getMesureDetailsControl().show();
+	}
+	else
+	{
+		getMesureDetailsControl().hide();
+	}
 }
 
 function updateLineOutput()
