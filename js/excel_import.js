@@ -164,10 +164,7 @@ function updateHeaderMappingDisplay(){
 }
 
 function createMeasures(){
-
-	console.log(changeColumn);
 	var measures = new Array();
-	
 	var selectedSheet = sheets[selectedSheetIndex];
 	
 	for(var line in selectedSheet.lines){
@@ -183,10 +180,13 @@ function createMeasures(){
 			measure.read = selectedSheet.lines[line][readColumn];
 			measure.write = selectedSheet.lines[line][writeColumn];
 			measure.comment = selectedSheet.lines[line][commentColumn];
-			measures.push(mesaure);
+			measures.push(measure);
 		}
 	}
-	JSON.stringify(measures, 2, 2);
+	var output = JSON.stringify(measures, 2, 2);
+	if(out_measures.innerText === undefined) out_measures.textContent = output;
+	else out_measures.innerText = output;
+	//console.log(JSON.stringify(measures, 2, 2));
 }
 
 function setColumnValue(control, value, nullValue){
