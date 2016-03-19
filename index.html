@@ -61,6 +61,48 @@
 </head>
 
 <body>
+<div class="container-fluid">
+            <div class="row">
+			<div class="col-xs-9 col-sm-offset-1">
+                <h2>Importation Excel</h2>
+				
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label class="control-label col-sm-3" for="nom">Nom du projet</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="nom" placeholder="Entrez le nom du projet">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3" for="strat">Stratégie de mesure</label>
+                        <div class="col-sm-6">          
+                            <input type="text" class="form-control" id="strat" placeholder="Entrez la stratégie de mesure">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3" for="utilisateur">Utilisateurs fonctionnels</label>
+                        <div class="col-sm-6">          
+                            <input type="text" class="form-control" id="utilisateur" placeholder="Entrez les utilisateurs fonctionnels séparés par une virgule">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3" for="granu">Niveau de granularité</label>
+                        <div class="col-sm-6">          
+                            <input type="text" class="form-control" id="granu" placeholder="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3" for="decom">Niveau de décomposition</label>
+                        <div class="col-sm-6">          
+                            <input type="text" class="form-control" id="decom" placeholder="">
+                        </div>
+                    </div>
+                </form>
+				</div>
+            </div>
+        </div>
+
+
     <b>JS-XLSX (XLSX/XLSB/XLSM/XLS/XML) Live Demo</b>
     <div id="drop">Drop an XLSX / XLSM / XLSB / ODS / XLS / XML file here to see sheet data</div>
     <p>
@@ -111,6 +153,124 @@
         <!--Output is printed here-->
         <pre id="out"></pre>
     </div>
+<div class="container-fluid">
+            <div class="row">
+			<div class="col-xs-9 col-sm-offset-1">
+			<form class="form-horizontal" role="form">
+				<div class="form-group">
+                    <label class="control-label col-sm-3" for="nom">Changement</label>
+                    <div class="dropdown" style="display:inline">
+						<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="dd_changement" style="width: 200px;">Changement
+						<span class="caret"></span></button>
+						<ul class="dropdown-menu" id="opt_changement" style="width: 200px;">
+						</ul>
+					</div>
+                </div>
+				<div class="form-group">
+                    <label class="control-label col-sm-3" for="nom">Système</label>
+                    <div class="dropdown" style="display:inline">
+						<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="dd_systeme" style="width: 200px;">Système
+						<span class="caret"></span></button>
+						<ul class="dropdown-menu" id="opt_systeme" style="width: 200px;">
+						</ul>
+					</div>
+                </div>
+				<div class="form-group">
+                    <label class="control-label col-sm-3" for="nom">Référence</label>
+                    <div class="dropdown" style="display:inline">
+						<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="dd_reference" style="width: 200px;">Référence
+						<span class="caret"></span></button>
+						<ul class="dropdown-menu" id="opt_reference" style="width: 200px;">
+						</ul>
+					</div>
+                </div>
+				<div class="form-group">
+                    <label class="control-label col-sm-3" for="nom">Processus Fonctionnel</label>
+                    <div class="dropdown" style="display:inline">
+						<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="dd_processus_fonctionnel" style="width: 200px;">Processus Fonctionnel
+						<span class="caret"></span></button>
+						<ul class="dropdown-menu" id="opt_processus_fonctionnel" style="width: 200px;">
+						</ul>
+					</div>
+                </div>
+				<div class="form-group">
+                    <label class="control-label col-sm-3" for="nom">Groupe de donnée</label>
+                    <div class="dropdown" style="display:inline">
+						<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="dd_groupe_donnee" style="width: 200px;">Groupe de donnée
+						<span class="caret"></span></button>
+						<ul class="dropdown-menu" id="opt_groupe_donnee" style="width: 200px;">
+						</ul>
+					</div>
+                </div>
+				<div class="form-group">
+                    <label class="control-label col-sm-3" for="nom">Mouvements</label>
+                    <div class="dropdown" style="display:inline">
+						<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="dd_mouvements" style="width: 200px;">Mouvements
+						<span class="caret"></span></button>
+						<ul class="dropdown-menu" id="opt_mouvements" style="width: 200px;">
+						</ul>
+					</div>
+                </div>
+				<div class="form-group">
+                    <label class="control-label col-sm-3" for="nom">Réutilisation</label>
+                    <div class="dropdown" style="display:inline">
+						<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="dd_reutilisation" style="width: 200px;">Réutilisation
+						<span class="caret"></span></button>
+						<ul class="dropdown-menu" id="opt_reutilisation" style="width: 200px;">
+						</ul>
+					</div>
+                </div>
+				<div class="form-group">
+                    <label class="control-label col-sm-3" for="nom">Entrée</label>
+                    <div class="dropdown" style="display:inline">
+						<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="dd_entree" style="width: 200px;">Entrée
+						<span class="caret"></span></button>
+						<ul class="dropdown-menu" id="opt_entree" style="width: 200px;">
+						</ul>
+					</div>
+                </div>
+				<div class="form-group">
+                    <label class="control-label col-sm-3" for="nom">Sortie</label>
+                    <div class="dropdown" style="display:inline">
+						<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="dd_sortie" style="width: 200px;">Sortie
+						<span class="caret"></span></button>
+						<ul class="dropdown-menu" id="opt_sortie" style="width: 200px;">
+						</ul>
+					</div>
+                </div>
+				<div class="form-group">
+                    <label class="control-label col-sm-3" for="nom">Lecture</label>
+                    <div class="dropdown" style="display:inline">
+						<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="dd_ecriture" style="width: 200px;">Écriture
+						<span class="caret"></span></button>
+						<ul class="dropdown-menu" id="opt_ecriture" style="width: 200px;">
+						</ul>
+					</div>
+                </div>
+				<div class="form-group">
+                    <label class="control-label col-sm-3" for="nom">Lecture</label>
+                    <div class="dropdown" style="display:inline">
+						<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="dd_lecture" style="width: 200px;">Lecture
+						<span class="caret"></span></button>
+						<ul class="dropdown-menu" id="opt_lecture" style="width: 200px;">
+						</ul>
+					</div>
+                </div>
+				<div class="form-group">
+                    <label class="control-label col-sm-3" for="nom">Commentaire</label>
+                    <div class="dropdown" style="display:inline">
+						<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="dd_commentaire" style="width: 200px;">Commentaire
+						<span class="caret"></span></button>
+						<ul class="dropdown-menu" id="opt_commentaire" style="width: 200px;">
+						</ul>
+					</div>
+                </div>
+			
+			</form>
+			</div>
+            </div>
+        </div>
+
     
 </body>
 
