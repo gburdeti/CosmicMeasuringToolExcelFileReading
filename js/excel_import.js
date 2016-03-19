@@ -1,4 +1,3 @@
-var X = XLSX;
 var sheets = null;
 var selectedSheetIndex = -1;
 var selectedLineIndex = -1;
@@ -90,7 +89,7 @@ function processFile(files){
 		var name = f.name;
 		reader.onload = function(e) {
 			var data = e.target.result;
-			var	wb = X.read(data, {type: 'binary'});
+			var	wb = XLSX.read(data, {type: 'binary'});
 			sheets = getSheetData(wb);
             updateSheetOptions(sheets);
             selectSheet(-1);
@@ -105,7 +104,7 @@ function updateSheetOptions(sheets){
     var sheetOptions = $('#sheet_options');
     sheetOptions.html("");
     for(var sheetIndex in sheets){
-        sheetOptions.append("<li><a href=\"#\" data-value=\"" + sheetIndex + "\" onclick=\"fct(e){ e.preventDefault(); selectSheet('" + sheetIndex + "');}\">" + sheets[sheetIndex].name + "</a></li>");
+        sheetOptions.append("<li><a href=\"#\" data-value=\"" + sheetIndex + "\" onclick=\"event.preventDefault(); selectSheet('" + sheetIndex + "');\">" + sheets[sheetIndex].name + "</a></li>");
     }
 }
 
@@ -148,7 +147,7 @@ function updateLineOptions(){
     if(selectedSheetIndex >= 0){
         var selectedSheet = sheets[selectedSheetIndex];
         for(var lineIndex in selectedSheet.lines){
-            lineOptions.append("<li><a href=\"#\" data-value=\"" + lineIndex + "\" onclick=\"fct(e){ e.preventDefault(); selectLine('" + lineIndex + "');}\">" + lineIndex + "</a></li>");
+            lineOptions.append("<li><a href=\"#\" data-value=\"" + lineIndex + "\" onclick=\"event.preventDefault(); selectLine('" + lineIndex + "');\">" + lineIndex + "</a></li>");
         }
     }
 }
