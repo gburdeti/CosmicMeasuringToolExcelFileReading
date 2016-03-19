@@ -157,6 +157,9 @@ function updateHeaderMappingDisplay(){
 		updateDropDownOptions(getDataGroupOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); setColumnValue(getDataGroupDropDown(), value.attr("data-value"), "Groupe de donnees");});
 		updateDropDownOptions(getEnterOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); setColumnValue(getEnterDropDown(), value.attr("data-value"), "Entree");});
 		updateDropDownOptions(getExitOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); setColumnValue(getExitDropDown(), value.attr("data-value"), "Exit");});
+		updateDropDownOptions(getReadOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); setColumnValue(getReadDropDown(), value.attr("data-value"), "Lecture");});
+		updateDropDownOptions(getWriteOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); setColumnValue(getWriteDropDown(), value.attr("data-value"), "Ecriture");});
+		updateDropDownOptions(getCommentOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); setColumnValue(getCommentDropDown(), value.attr("data-value"), "Commentaire");});
 	}
 }
 
