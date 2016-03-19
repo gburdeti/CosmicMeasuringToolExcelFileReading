@@ -154,7 +154,7 @@ function updateHeaderMappingDisplay(){
 		updateDropDownOptions(getSystemOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); setColumnValue(getSystemDropDown(), value.attr("data-value"), "Systeme");});
 		updateDropDownOptions(getReferenceOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); setColumnValue(getReferenceDropDown(), value.attr("data-value"), "Reference");});
 		updateDropDownOptions(getProcessOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); setColumnValue(getProcessDropDown(), value.attr("data-value"), "Processus Fonctionnel");});
-		updateDropDownOptions(getDataGroupOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); setColumnValue(getDataGroupDropDown(), value.attr("data-value"), "Processus Fonctionnel");});
+		updateDropDownOptions(getDataGroupOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); setColumnValue(getDataGroupDropDown(), value.attr("data-value"), "Groupe de donnees");});
 		updateDropDownOptions(getEnterOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); setColumnValue(getEnterDropDown(), value.attr("data-value"), "Entree");});
 		updateDropDownOptions(getExitOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); setColumnValue(getExitDropDown(), value.attr("data-value"), "Exit");});
 	}
