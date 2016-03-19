@@ -30,6 +30,8 @@ function getMesureDetailsControl(){
 }
 
 /* COLUMN DROP DOWNS */
+
+// CHANGEMENT
 function getChangeDropDown(){
 	return $("#dd_changement");
 }
@@ -40,83 +42,83 @@ function getChangeOptions(){
 
 // SYSTEME
 function getSystemDropDown(){
-	return $("dd_systeme");
+	return $("#dd_systeme");
 }
 
 function getSystemOptions(){
-	return $("opt_systeme");
+	return $("#opt_systeme");
 }
 
 // REFERENCE
 function getReferenceDropDown(){
-	return $("dd_reference");
+	return $("#dd_reference");
 }
 
 function getReferenceOptions(){
-	return $("opt_reference");
+	return $("#opt_reference");
 }
 
 // PROCESSUS
 function getProcessDropDown(){
-	return $("dd_processus");
+	return $("#dd_processus_fonctionnel");
 }
 
 function getProcessOptions(){
-	return $("opt_reference");
+	return $("#opt_processus_fonctionnel");
 }
 
 // DATA GROUP
 function getDataGroupDropDown(){
-	return $("dd_groupe_donnee");
+	return $("#dd_groupe_donnee");
 }
 
 function getDataGroupOptions(){
-	return $("opt_groupe_donnee");
+	return $("#opt_groupe_donnee");
 }
 
 // ENTREE
-function getDataGroupDropDown(){
-	return $("dd_groupe_donnee");
+function getEnterDropDown(){
+	return $("#dd_entree");
 }
 
-function getDataGroupOptions(){
-	return $("opt_groupe_donnee");
+function getEnterOptions(){
+	return $("#opt_entree");
 }
 
 // SORTIE
 function getExitDropDown(){
-	return $("dd_sortie");
+	return $("#dd_sortie");
 }
 
 function getExitOptions(){
-	return $("opt_sortie");
+	return $("#opt_sortie");
 }
 
 // ECRITURE
 function getWriteDropDown(){
-	return $("dd_ecriture");
+	return $("#dd_ecriture");
 }
 
 function getWriteOptions(){
-	return $("opt_ecriture");
+	return $("#opt_ecriture");
 }
 
 // LECTURE
 function getReadDropDown(){
-	return $("dd_lecture");
+	return $("#dd_lecture");
 }
 
 function getReadOptions(){
-	return $("opt_lecture");
+	return $("#opt_lecture");
 }
 
 // COMMENTAIRE
 function getCommentDropDown(){
-	return $("dd_commentaire");
+	return $("#dd_commentaire");
 }
 
 function getCommentOptions(){
-	return $("opt_commentaire");
+	return $("#opt_commentaire");
 }
 
 function hideOutputs(){

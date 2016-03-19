@@ -99,12 +99,15 @@ function updateSheetOutput()
 }
 
 function updateLineOptions(){
-     var lineOptions = getLineOptions();
-     lineOptions.html("");
+	var maxLines = 10;
+    var lineOptions = getLineOptions();
+    lineOptions.html("");
     if(selectedSheetIndex >= 0){
-        var selectedSheet = sheets[selectedSheetIndex];
+        var lineCount = 0;
+		var selectedSheet = sheets[selectedSheetIndex];
         for(var lineIndex in selectedSheet.lines){
             lineOptions.append("<li><a href=\"#\" data-value=\"" + lineIndex + "\" onclick=\"event.preventDefault(); selectLine('" + lineIndex + "');\">" + lineIndex + "</a></li>");
+			if(++lineCount >= maxLines)return;
         }
     }
 }
@@ -147,16 +150,35 @@ function updateHeaderMappingDisplay(){
 	if(selectedLineIndex >= 0)
 	{
 		var selectedLine = sheets[selectedSheetIndex].lines[selectedLineIndex];
-		updateDropDownOptions(getChangeOptions(), selectedLine, null);
+		updateDropDownOptions(getChangeOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); setColumnValue(getChangeDropDown(), value.attr("data-value"), "Changements");});
+		updateDropDownOptions(getSystemOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); setColumnValue(getSystemDropDown(), value.attr("data-value"), "Systeme");});
+		updateDropDownOptions(getReferenceOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); setColumnValue(getReferenceDropDown(), value.attr("data-value"), "Reference");});
+		updateDropDownOptions(getProcessOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); setColumnValue(getProcessDropDown(), value.attr("data-value"), "Processus Fonctionnel");});
+		updateDropDownOptions(getDataGroupOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); setColumnValue(getDataGroupDropDown(), value.attr("data-value"), "Processus Fonctionnel");});
+		updateDropDownOptions(getEnterOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); setColumnValue(getEnterDropDown(), value.attr("data-value"), "Entree");});
+		updateDropDownOptions(getExitOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); setColumnValue(getExitDropDown(), value.attr("data-value"), "Exit");});
 	}
+}
+
+function setColumnValue(control, value, nullValue){
+	control.html("");
+	if(value == null)
+	{
+		control.html(nullValue);
+	}
+	else
+	{
+		control.html(sheets[selectedSheetIndex].lines[selectedLineIndex][value]);
+	}
+	control.append("<span class=\"caret\"></span>");
 }
 
 function updateDropDownOptions(control, options, update){
 	control.html("");
 	for(var option in options){
 		var opt = $("<li></li>");
-		var ref = $("<a href='#'>" + options[option] + "</a>");
-		ref.onClick = update;
+		var ref = $("<a href='#' data-value='" + option + "'>" + options[option] + "</a>");
+		ref.click(update);
 		opt.append(ref);
 		control.append(opt);
 	}
