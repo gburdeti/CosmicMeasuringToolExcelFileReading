@@ -54,7 +54,7 @@ function displayOutput(checkbox){
 }
 
 function getSheetDropdown(){
-	return $('[name="sheet_dropdown"]');
+	return $('#sheet_dropdown');
 }
 
 function sheetDropdownEnabled(enable){
@@ -62,7 +62,7 @@ function sheetDropdownEnabled(enable){
 }
 
 function getLineDropdown(){
-	return $('[name="line_dropdown"]');
+	return $('#line_dropdown');
 }
 
 function lineDropdownEnabled(enable){
