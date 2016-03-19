@@ -150,17 +150,43 @@ function updateHeaderMappingDisplay(){
 	if(selectedLineIndex >= 0)
 	{
 		var selectedLine = sheets[selectedSheetIndex].lines[selectedLineIndex];
-		updateDropDownOptions(getChangeOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); setColumnValue(getChangeDropDown(), value.attr("data-value"), "Changements");});
-		updateDropDownOptions(getSystemOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); setColumnValue(getSystemDropDown(), value.attr("data-value"), "Systeme");});
-		updateDropDownOptions(getReferenceOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); setColumnValue(getReferenceDropDown(), value.attr("data-value"), "Reference");});
-		updateDropDownOptions(getProcessOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); setColumnValue(getProcessDropDown(), value.attr("data-value"), "Processus Fonctionnel");});
-		updateDropDownOptions(getDataGroupOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); setColumnValue(getDataGroupDropDown(), value.attr("data-value"), "Groupe de donnees");});
-		updateDropDownOptions(getEnterOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); setColumnValue(getEnterDropDown(), value.attr("data-value"), "Entree");});
-		updateDropDownOptions(getExitOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); setColumnValue(getExitDropDown(), value.attr("data-value"), "Exit");});
-		updateDropDownOptions(getReadOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); setColumnValue(getReadDropDown(), value.attr("data-value"), "Lecture");});
-		updateDropDownOptions(getWriteOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); setColumnValue(getWriteDropDown(), value.attr("data-value"), "Ecriture");});
-		updateDropDownOptions(getCommentOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); setColumnValue(getCommentDropDown(), value.attr("data-value"), "Commentaire");});
+		updateDropDownOptions(getChangeOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); var data = value.attr("data-value"); setColumnValue(getChangeDropDown(), data, "Changements"); changeColumn = data;});
+		updateDropDownOptions(getSystemOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); var data = value.attr("data-value"); setColumnValue(getSystemDropDown(), data, "Systeme"); systemColumn = data;});
+		updateDropDownOptions(getReferenceOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); var data = value.attr("data-value"); setColumnValue(getReferenceDropDown(), data, "Reference"); referenceColumn = data;});
+		updateDropDownOptions(getProcessOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); var data = value.attr("data-value"); setColumnValue(getProcessDropDown(), data, "Processus Fonctionnel"); processColumn = data;});
+		updateDropDownOptions(getDataGroupOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); var data = value.attr("data-value"); setColumnValue(getDataGroupDropDown(), data, "Groupe de donnees"); dataGroupColumn = data;});
+		updateDropDownOptions(getEnterOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); var data = value.attr("data-value"); setColumnValue(getEnterDropDown(), data, "Entree"); enterColumn = data; enterColumn = data;});
+		updateDropDownOptions(getExitOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); var data = value.attr("data-value"); setColumnValue(getExitDropDown(), data, "Sortie"); exitColumn = data;});
+		updateDropDownOptions(getReadOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); var data = value.attr("data-value"); setColumnValue(getReadDropDown(), data, "Lecture"); readColumn = data;});
+		updateDropDownOptions(getWriteOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); var data = value.attr("data-value"); setColumnValue(getWriteDropDown(), data, "Ecriture"); writeColumn = data;});
+		updateDropDownOptions(getCommentOptions(), selectedLine, function(e){e.preventDefault(); var value = $(e.target); var data = value.attr("data-value"); setColumnValue(getCommentDropDown(), value.attr("data-value"), "Commentaire"); commentColumn = data;});
 	}
+}
+
+function createMeasures(){
+
+	console.log(changeColumn);
+	var measures = new Array();
+	
+	var selectedSheet = sheets[selectedSheetIndex];
+	
+	for(var line in selectedSheet.lines){
+		if(line > selectedLineIndex){
+			var measure = new Object();
+			measure.change = selectedSheet.lines[line][changeColumn];
+			measure.system = selectedSheet.lines[line][systemColumn];
+			measure.reference = selectedSheet.lines[line][referenceColumn];
+			measure.process = selectedSheet.lines[line][processColumn];
+			measure.dataGroup = selectedSheet.lines[line][dataGroupColumn];
+			measure.enter = selectedSheet.lines[line][enterColumn];
+			measure.exit = selectedSheet.lines[line][exitColumn];
+			measure.read = selectedSheet.lines[line][readColumn];
+			measure.write = selectedSheet.lines[line][writeColumn];
+			measure.comment = selectedSheet.lines[line][commentColumn];
+			measures.push(mesaure);
+		}
+	}
+	JSON.stringify(measures, 2, 2);
 }
 
 function setColumnValue(control, value, nullValue){
