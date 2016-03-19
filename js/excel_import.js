@@ -53,26 +53,59 @@ function displayOutput(checkbox){
 	}
 }
 
+/* SHEET DROPDOWN */
 function getSheetDropdown(){
-	return $('#sheet_dropdown');
+	return $('#dd_sheet');
+}
+
+function getSheetOptions(){
+	return $('#opt_sheet');
 }
 
 function sheetDropdownEnabled(enable){
 	getSheetDropdown().prop('disabled', !enable);
 }
 
+/* LINE DROP DOWN */
 function getLineDropdown(){
-	return $('#line_dropdown');
+	return $('#dd_line');
+}
+
+function getLineOptions(){
+	return $('#opt_line');
 }
 
 function lineDropdownEnabled(enable){
 	getLineDropdown().prop('disabled', !enable);
 }
 
-function xw(data, cb) {
-	transferable = document.getElementsByName("xferable")[0].checked;
-	if(transferable) xw_xfer(data, cb);
-	else xw_noxfer(data, cb);
+/* COLUMN DROP DOWNS */
+function getChangeDropDown(){
+	return $("#dd_changements");
+}
+
+function getChangeOptions(){
+	return $("#opt_changements");
+}
+
+function getSystemDropDown(){
+	return $("dd_systeme");
+}
+
+function getSystemOptions(){
+	return $("opt_systeme");
+}
+
+function getReferenceDropDown(){
+	return $("dd_reference");
+}
+
+function getReferenceOptions(){
+	return $("opt_reference");
+}
+
+function getProcessDropDown(){
+	return $("dd_processus");
 }
 
 function handleDrop(e) {
@@ -86,7 +119,6 @@ function processFile(files){
     var f = files[0];
 	{
 		var reader = new FileReader();
-		var name = f.name;
 		reader.onload = function(e) {
 			var data = e.target.result;
 			var	wb = XLSX.read(data, {type: 'binary'});
@@ -101,7 +133,7 @@ function processFile(files){
 }
 
 function updateSheetOptions(sheets){
-    var sheetOptions = $('#sheet_options');
+    var sheetOptions = getSheetOptions();
     sheetOptions.html("");
     for(var sheetIndex in sheets){
         sheetOptions.append("<li><a href=\"#\" data-value=\"" + sheetIndex + "\" onclick=\"event.preventDefault(); selectSheet('" + sheetIndex + "');\">" + sheets[sheetIndex].name + "</a></li>");
@@ -142,7 +174,7 @@ function updateSheetOutput()
 }
 
 function updateLineOptions(){
-     var lineOptions = $('#line_options');
+     var lineOptions = getLineOptions();
      lineOptions.html("");
     if(selectedSheetIndex >= 0){
         var selectedSheet = sheets[selectedSheetIndex];
@@ -168,7 +200,6 @@ function selectLine(lineIndex){
 
 function onSelectedLineChanged(){
     updateLineOutput();
-	// 
 }
 
 function updateLineOutput()
@@ -180,6 +211,13 @@ function updateLineOutput()
         out_line.textContent = output;
 	else
         out_line.innerText = output;
+}
+
+function updateHeaderMappingDisplay(){
+	if(selectedLineIndex >= 0)
+	{
+		
+	}
 }
 
 function setOutput(data){
