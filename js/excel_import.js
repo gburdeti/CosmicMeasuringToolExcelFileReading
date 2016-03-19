@@ -107,7 +107,7 @@ function updateLineOptions(){
 		var selectedSheet = sheets[selectedSheetIndex];
         for(var lineIndex in selectedSheet.lines){
             lineOptions.append("<li><a href=\"#\" data-value=\"" + lineIndex + "\" onclick=\"event.preventDefault(); selectLine('" + lineIndex + "');\">" + lineIndex + "</a></li>");
-			if(++lineCount >= maxLines)return;
+			if(++lineCount >= maxLines)return false;
         }
     }
 }
